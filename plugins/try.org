@@ -1,0 +1,4 @@
+#+begin_src emacs-lisp
+  (use-package try
+    :defer 1)
+#+end_src

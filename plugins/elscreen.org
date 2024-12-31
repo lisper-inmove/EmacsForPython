@@ -1,0 +1,10 @@
+#+BEGIN_SRC emacs-lisp
+  (use-package elscreen
+    :defer 2
+    :config
+    (elscreen-start)
+    (elscreen-set-prefix-key "\C-t")
+    (setq elscreen-display-tab nil))
+#+END_SRC
+
+#+RESULTS:

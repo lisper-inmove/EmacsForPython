@@ -1,0 +1,24 @@
+#+begin_src emacs-lisp
+  (use-package company
+    :ensure t
+    :config
+    (global-company-mode 1))
+
+  (use-package company-anaconda
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-anaconda))
+
+  (use-package anaconda-mode
+    :ensure t
+    :config
+    (add-hook 'python-mode-hook 'anaconda-mode))
+
+  (setq company-idle-delay 0.2)  ; 延迟 0.2 秒后触发补全
+  (setq company-minimum-prefix-length 1)  ; 最小前缀长度为 1
+
+  (setq anaconda-mode-complete-on-dot t)  ; 启用按点补全
+#+end_src
+
+#+RESULTS:
+: t

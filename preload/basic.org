@@ -1,0 +1,106 @@
+#+STARTUP: indent
+#+PROPERTY: header-args :results silent
+
+#+BEGIN_SRC emacs-lisp
+  (dolist
+      (key '("\C-b" "\C-o" "\C-p" "\C-q"
+             "\C-t" "\C-v" "\C-z" "\C-f" "\C-r"
+             ))
+    (global-unset-key key))
+  (setq home "~/.emacs.d/")
+  (global-visual-line-mode 1)
+  (set-frame-font "Monospace-15")
+  ;; 使用y代替yes,n代替no
+  (fset 'yes-or-no-p 'y-or-n-p)
+  ;; 括号匹配
+  (show-paren-mode t)
+  ;; 不要菜单栏
+  (menu-bar-mode -1)
+  ;; 不要工具栏
+  (tool-bar-mode -1)
+  ;; 不要滚动条
+  (if (boundp 'x-toolkit-scroll-bars)
+      (scroll-bar-mode -1))
+  ;; 状态栏显示时间
+  (display-time-mode t)
+  ;;状态栏显示列号
+  (column-number-mode t)
+  ;; 鼠标遇到光标时弹开
+  (mouse-avoidance-mode 'animate)
+
+  ;; 最后一行不要有换行符
+  ;(setq-default next-line-add-newlines nil)
+  ;(setq mode-require-final-newline nil)
+
+  ;; 终端不响铃
+  (setq ring-bell-function 'ignore ;; 终端不响铃
+        visible-bell t ;; 状态栏不闪
+
+        user-full-name "LisperInmove" ;; 邮件用户名
+        user-mail-address "lisper.inmove@gmail.com" ;; 邮箱
+
+        ;; scroll-margin 3 ;; 屏幕滚动时保留三行
+        scroll-conservatively 100000
+
+        make-backup-files nil ;; 关闭自动保存
+        auto-save-default nil
+
+        display-time-24hr-format t ;; 24小时
+        display-time-day-and-date t)
+
+  (setq-default c-basic-offset 2)
+  (setq-default indent-tabs-mode nil)
+  ;; 选中行的颜色
+  (set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
+
+  ;; 减少gc的次数
+  (setq gc-cons-threshold (* 50 1000 1000))
+
+  ;; 保存时删除行尾空格
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  ;; (add-hook 'before-save-hook 'whitespace-cleanup)
+  (defun my-load-file (filename)
+    (load-file (expand-file-name (concat home filename))))
+
+  (fset 'delete-empty-lines (kbd "M-x flush-lines RET ^\s-*$ RET"))
+  ;; 在orgmode的src block中使用C-c C-c的时候不询问
+  (setq org-confirm-babel-evaluate nil)
+  (add-to-list 'default-frame-alist '(fullscreen . fullboth))
+
+  ;; 当文件内容比较大时,非常占用cpu
+  (line-number-mode 0)
+
+  (global-display-line-numbers-mode 1)
+
+  ;; 默认打开  hs-minor-mode
+  (add-hook 'prog-mode-hook (lambda () (hs-minor-mode t)))
+#+END_SRC
+
+* exec-path-from-shell
+#+begin_src emacs-lisp
+  (when (display-graphic-p)
+    (use-package exec-path-from-shell
+      :defer 1
+      :config
+      (exec-path-from-shell-initialize)))
+#+end_src
+
+* line-number-at-pos
+#+BEGIN_SRC emacs-lisp
+  (advice-add
+   'line-number-at-pos
+   :override
+   (lambda (&rest r)
+     (string-to-number (format-mode-line "%l"))
+     )
+   )
+#+END_SRC
+
+#+begin_src emacs-lisp
+  ;; (setq debug-on-error t)
+#+end_src
+
+* electric pair
+#+begin_src emacs-lisp
+  (electric-pair-mode t)
+#+end_src

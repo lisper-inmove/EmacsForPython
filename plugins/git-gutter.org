@@ -1,0 +1,19 @@
+#+begin_src emacs-lisp
+  (use-package git-gutter
+    :defer 1
+    :config
+    (global-git-gutter-mode +1)
+    (global-set-key (kbd "C-p") 'git-gutter:previous-hunk)
+    (global-set-key (kbd "C-n") 'git-gutter:next-hunk)
+    (custom-set-variables
+     '(git-gutter:update-interval 1)
+     '(git-gutter:lighter " GG")
+     '(git-gutter:window-width 2)
+     '(git-gutter:modified-sign "☁")
+     '(git-gutter:added-sign "☀")
+     '(git-gutter:deleted-sign "☂")
+     '(git-gutter:disabled-modes '(asm-mode image-mode))
+     '(git-gutter:separator-sign "|")
+     '(git-gutter:ask-p nil)
+     ))
+#+end_src

@@ -1,0 +1,6 @@
+#+begin_src emacs-lisp
+  (use-package counsel
+    :defer 1
+    :config
+    (global-set-key (kbd "C-c a") 'counsel-ag))
+#+end_src

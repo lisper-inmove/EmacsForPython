@@ -1,0 +1,6 @@
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-window
+    :defer 2
+    :config
+    (global-set-key (kbd "C-c o") 'ace-window))
+#+END_SRC

@@ -1,0 +1,48 @@
+#+begin_src emacs-lisp
+  (if (string> org-version "9.2")
+      (require 'org-tempo))
+  (global-set-key (kbd "<f9>") 'org-agenda)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     (python . t)
+     (C . t)
+     (shell . t)
+     )
+   )
+  (global-set-key (kbd "<f6>") 'org-publish-current-file)
+
+  (add-hook 'org-mode-hook (lambda () (visual-line-mode nil)))
+
+  (defun org-babel-execute:yaml (body params) body) ;; src execute for yaml
+  (defun org-babel-execute:protobuf (body params) body) ;; src execute for protobuf
+  ;; (defun org-babel-execute:python (body params) body) ;; src execute for python
+  (defun org-babel-execute:html (body params) body) ;; src execute for html
+  (defun org-babel-execute:typescript (body params) body) ;; src execute for html
+#+end_src
+
+#+RESULTS:
+: org-babel-execute:html
+
+#+begin_src emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (if (display-graphic-p)
+                    (org-bullets-mode 1))
+                )
+              )
+    )
+#+end_src
+#+begin_src emacs-lisp
+  (setq org-html-text-markup-alist
+        '((bold . "<b>%s</b>")
+          (code . "<code>%s</code>")
+          (italic . "<i>%s</i>")
+          (strike-through . "<del>%s</del>")
+          (underline . "<span class=\"underline\">%s</span>")
+          (verbatim . "<kbd>%s</kbd>")))
+#+end_src

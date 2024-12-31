@@ -1,0 +1,7 @@
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :bind (("C-x g" . magit-status))
+    :config
+    (message "load magit")
+    )
+#+END_SRC

@@ -1,0 +1,6 @@
+#+begin_src emacs-lisp
+  (use-package find-file-in-project
+    :defer 1
+    :config
+    (global-set-key (kbd "C-f p") 'find-file-in-project))
+#+end_src

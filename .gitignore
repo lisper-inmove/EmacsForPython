@@ -1,0 +1,8 @@
+ac-comphist.dat
+anaconda-mode
+elpa
+elpy
+projectile-bookmarks.eld
+recentf
+*.el
+!init.el

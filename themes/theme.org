@@ -1,0 +1,6 @@
+* monokai
+#+BEGIN_SRC emacs-lisp
+  (use-package monokai-theme
+    :config
+    (load-theme 'monokai t))
+#+END_SRC

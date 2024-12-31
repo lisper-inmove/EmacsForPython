@@ -1,0 +1,20 @@
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init
+    (global-flycheck-mode))  ;; 开启全局的 flycheck 支持
+
+  ;; (setq flycheck-python-flake8-executable "flake8")  ;; 使用 flake8
+  ;; 或者
+  (setq flycheck-python-pylint-executable "pylint")  ;; 使用 pylint
+
+  ;; Bind C-c n to next error in flycheck
+  (global-set-key (kbd "C-c n") 'flycheck-next-error)
+
+  ;; Bind C-c p to previous error in flycheck
+  (global-set-key (kbd "C-c p") 'flycheck-previous-error)
+
+#+end_src
+
+#+RESULTS:
+: pylint

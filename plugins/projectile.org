@@ -1,0 +1,9 @@
+#+begin_src emacs-lisp
+  (use-package projectile
+    :ensure t
+    :config
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "C-c p a") 'projectile-add-known-project)
+    (projectile-mode +1)
+    )
+#+end_src

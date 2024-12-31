@@ -1,0 +1,4 @@
+#+BEGIN_SRC emacs-lisp
+  (use-package htmlize
+    :defer 2)
+#+END_SRC
