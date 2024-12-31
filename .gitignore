@@ -6,3 +6,6 @@ projectile-bookmarks.eld
 recentf
 *.el
 !init.el
+.dap-breakpoints
+auto-save-list
+bm-repository
