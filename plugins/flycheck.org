@@ -9,10 +9,10 @@
   (setq flycheck-python-pylint-executable "pylint")  ;; 使用 pylint
 
   ;; Bind C-c n to next error in flycheck
-  (global-set-key (kbd "C-c n") 'flycheck-next-error)
+  (global-set-key (kbd "C-c n n") 'flycheck-next-error)
 
   ;; Bind C-c p to previous error in flycheck
-  (global-set-key (kbd "C-c p") 'flycheck-previous-error)
+  (global-set-key (kbd "C-c n p") 'flycheck-previous-error)
 
 #+end_src
 

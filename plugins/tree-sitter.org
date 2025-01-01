@@ -1,0 +1,17 @@
+#+begin_src emacs-lisp :results silent
+  (use-package tree-sitter
+    :ensure t
+    :config
+    (global-tree-sitter-mode)  ;; 启用全局 Tree-sitter 模式
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))  ;; 启用高亮显示
+
+  (use-package tree-sitter-langs
+    :ensure t
+    :config
+    (tree-sitter-require 'python)
+    (tree-sitter-require 'javascript))
+
+  ;; 如果需要特定语言的支持
+  (add-hook 'python-mode-hook #'tree-sitter-mode)
+  (add-hook 'javascript-mode-hook #'tree-sitter-mode)
+#+end_src

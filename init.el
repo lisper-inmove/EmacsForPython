@@ -39,9 +39,6 @@
 (load-org "~/.emacs.d/python")
 ;; (load-org "~/.emacs.d/postload")
 
-;; (require 'tree-sitter)
-;; (require 'tree-sitter-langs)
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
