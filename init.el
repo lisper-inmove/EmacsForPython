@@ -55,7 +55,7 @@
  '(git-gutter:window-width 2)
  '(helm-minibuffer-history-key "M-p")
  '(package-selected-packages
-   '(evil find-file-in-project elpy tree-sitter-langs tree-sitter use-package)))
+   '(highlight-indent-guides evil find-file-in-project elpy tree-sitter-langs tree-sitter use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

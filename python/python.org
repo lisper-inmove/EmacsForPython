@@ -227,8 +227,7 @@
   ;; (add-hook 'after-save-hook #'my-python-save-hook)
 
   (use-package py-isort
-    :ensure t
-    :hook (python-mode . py-isort-enable-on-save))  ;; 启用在保存时自动排序 import
+    :ensure t)
 
   (add-hook 'before-save-hook 'py-isort-buffer)
 #+end_src

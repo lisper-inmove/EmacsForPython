@@ -78,6 +78,10 @@
 
   (setq auto-save-default nil)  ;; 禁用自动保存
   (setq create-lockfiles nil)  ;; 禁用锁定文件
+
+  (setq display-warning nil)
+  (setq warning-minimum-level :error)  ; 只显示警告和错误，不弹出警告窗口
+
 #+END_SRC
 
 * exec-path-from-shell
