@@ -1,6 +1,6 @@
 #+begin_src emacs-lisp :results silent
-  (use-package evil
-    :ensure t
-    :config
-    (evil-mode 1))  ;; 启用 evil-mode
+  ;; (use-package evil
+  ;;   :ensure t
+  ;;   :config
+  ;;   (evil-mode 1))  ;; 启用 evil-mode
 #+end_src
