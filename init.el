@@ -53,8 +53,9 @@
  '(git-gutter:separator-sign "|")
  '(git-gutter:update-interval 1)
  '(git-gutter:window-width 2)
+ '(helm-minibuffer-history-key "M-p")
  '(package-selected-packages
-   '(find-file-in-project elpy tree-sitter-langs tree-sitter use-package)))
+   '(evil find-file-in-project elpy tree-sitter-langs tree-sitter use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

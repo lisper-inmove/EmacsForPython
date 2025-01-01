@@ -74,6 +74,10 @@
 
   ;; 默认打开  hs-minor-mode
   (add-hook 'prog-mode-hook (lambda () (hs-minor-mode t)))
+
+
+  (setq auto-save-default nil)  ;; 禁用自动保存
+  (setq create-lockfiles nil)  ;; 禁用锁定文件
 #+END_SRC
 
 * exec-path-from-shell

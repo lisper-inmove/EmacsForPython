@@ -5,7 +5,10 @@ elpy
 projectile-bookmarks.eld
 recentf
 *.el
+**/*.el
 !init.el
 .dap-breakpoints
 auto-save-list
 bm-repository
+python/*
+!python/python.org

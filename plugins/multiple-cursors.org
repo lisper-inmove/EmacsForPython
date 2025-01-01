@@ -1,0 +1,4 @@
+#+begin_src emacs-lisp :results silent
+  (use-package multiple-cursors
+    :ensure t)
+#+end_src

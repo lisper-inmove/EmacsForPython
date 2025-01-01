@@ -1,0 +1,10 @@
+#+BEGIN_SRC emacs-lisp
+  (use-package undo-tree
+    :ensure t
+    :config
+    (undo-tree-mode)
+    :bind ("C-c t" . undo-tree-visualize))
+#+END_SRC
+
+#+RESULTS:
+: undo-tree-visualize

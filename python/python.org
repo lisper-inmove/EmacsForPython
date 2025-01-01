@@ -1,10 +1,234 @@
-#+begin_src emacs-lisp
-  ;; (use-package elpy
-  ;;     :ensure t
-  ;;     :defer t
-  ;;     :init
-  ;;     (advice-add 'python-mode :before 'elpy-enable))
+#+begin_src emacs-lisp :outputs silent
+  (defun python-yapf-revert-buffer-keep-undo (&rest -)
+    "Revert buffer but keep undo history."
+    (interactive)
+    (let ((inhibit-read-only t))
+      (clear-visited-file-modtime)
+      (erase-buffer)
+      (insert-file-contents (buffer-file-name))
+      (set-visited-file-modtime)
+      (set-buffer-modified-p nil)))
 
+  (defun python-yapf-revert-python-buffers ()
+    "Refresh all opened buffers of python files."
+    (interactive)
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (and (buffer-file-name)
+                   (string-match-p "\\.pyw?$"
+                                   (file-name-nondirectory (buffer-file-name)))
+                   (not (buffer-modified-p)))
+          (python-yapf-revert-buffer-keep-undo t t t))))
+    (message "Refreshed opened python files."))
+
+
+  (defcustom python-yapf-command "yapf"
+    "Command used to format a python file.
+
+  For further information, just check its usage help."
+    :type 'string
+    :group 'python)
+
+  (defcustom python-yapf-style "pep8"
+    "Formatting style: either a style name (for example 'pep8' or 'google'),
+  or the name of a file with style settings. 'pep8' is the default."
+    :type 'string
+    :group 'python)
+
+  (defvar python-yapf
+    (concat python-yapf-command
+            " --style " python-yapf-style)
+    "Python yapf command with formatting style.")
+
+
+  ;;;###autoload
+  (defun python-yapf-directory (dir &optional recurse-p)
+    "Search and format .py files in a directory.
+
+  All .py files within the directory will be examined, and, if RECURSE-P
+  is set to non-nil, subdirectories will be recursively searched.
+
+  Check `python-yapf-command' for what the format action will do."
+    (interactive
+     (let ((directory-name
+            (ido-read-directory-name "Format directory: "))
+           (recurse (y-or-n-p "Search recursively for all .py files?")))
+       (list directory-name recurse)))
+    (save-some-buffers (not compilation-ask-about-save) nil)
+    (shell-command (concat python-yapf " --in-place "
+                           (if recurse-p
+                               "--recursive ")
+                           dir))
+    (python-yapf-revert-python-buffers)
+    (message "Format files done!"))
+
+
+  ;;;###autoload
+  (defun python-yapf-file (file)
+    "Format a file(by default the one opened in current buffer).
+
+  Check `python-yapf-command' for what the format action will do."
+    (interactive
+     (let ((file-to-format
+            (ido-read-file-name
+             "Format file: " nil
+             (if (buffer-file-name)
+                 (file-name-nondirectory (buffer-file-name))))))
+       (list file-to-format)))
+    (let* ((file-name (file-name-nondirectory file))
+           (file-buffer (get-buffer file-name)))
+      (save-some-buffers (not compilation-ask-about-save) nil)
+      (shell-command (concat python-yapf " --in-place " file))
+      (when file-buffer
+        (with-current-buffer file-buffer
+          (if (buffer-modified-p file-buffer)
+              (python-yapf-revert-buffer-keep-undo t t t)))))
+    (message "Format files done!"))
+
+
+  ;;;###autoload
+  (defun python-yapf-region (beg end)
+    "Format the code of the region or the buffer if no region selected."
+    (interactive
+     (if (or (null transient-mark-mode)
+             mark-active)
+         (list (region-beginning) (region-end))
+       (list (point-min) (point-max))))
+    (let (output
+          (output-buffer "*python-yapf output*"))
+      (shell-command-on-region
+       beg end
+       python-yapf
+       output-buffer nil)
+      (setq output (with-current-buffer output-buffer
+                     (buffer-string)))
+      (if (and output
+               (not (string-match "^Traceback\\|^\\w+Error:" output)))
+          (progn
+            ;; no error
+            (goto-char beg)
+            (kill-region beg end)
+            (insert output)
+            (let ((window (get-buffer-window output-buffer 'visible)))
+              (if window
+                  (delete-window window)))
+            (kill-buffer output-buffer)
+            (message "Code has been formatted!"))
+        (message "Error occurred, please check!"))))
+
+
+  (provide 'python-yapf)
 #+end_src
 
 #+RESULTS:
+: python-yapf
+
+#+begin_src emacs-lisp :results silent
+  (require 'cl-lib)
+
+  (defcustom yapfify-executable "yapf"
+    "Executable used to start yapf."
+    :type 'string
+    :group 'yapfify)
+
+  (defun yapfify-call-bin (input-buffer output-buffer start-line end-line)
+    "Call process yapf on INPUT-BUFFER saving the output to OUTPUT-BUFFER.
+
+  Return the exit code.  START-LINE and END-LINE specify region to
+  format."
+    (with-current-buffer input-buffer
+      (call-process-region (point-min) (point-max)
+                           yapfify-executable nil output-buffer
+                           nil "-l" (concat (number-to-string start-line) "-"
+                                             (number-to-string end-line)))))
+
+  (defun get-buffer-string (buffer)
+    "Return the contents of BUFFER."
+    (with-current-buffer buffer
+      (buffer-string)))
+
+  ;;;###autoload
+  (defun yapfify-region (beginning end)
+    "Try to yapfify the current region.
+
+  If yapf exits with an error, the output will be shown in a help-window."
+    (interactive "r")
+    (let* ((original-buffer (current-buffer))
+           (original-point (point))  ; Because we are replacing text, save-excursion does not always work.
+           (buffer-windows (get-buffer-window-list original-buffer nil t))
+           (original-window-pos (mapcar 'window-start buffer-windows))
+           (start-line (line-number-at-pos beginning))
+           (end-line (line-number-at-pos (if (or (= (char-before end) 10)
+                                                 (= (char-before end) 13))
+                                             (- end 1)
+                                           end)))
+           (tmpbuf (get-buffer-create "*yapfify*"))
+           (dummy (with-current-buffer tmpbuf (erase-buffer)))
+           (exit-code (yapfify-call-bin original-buffer tmpbuf start-line end-line)))
+      (deactivate-mark)
+      ;; There are three exit-codes defined for YAPF:
+      ;; 0: Exit with success (change or no change on yapf >=0.11)
+      ;; 1: Exit with error
+      ;; 2: Exit with success and change (Backward compatibility)
+      ;; anything else would be very unexpected.
+      (cond ((or (eq exit-code 0) (eq exit-code 2))
+             (with-current-buffer tmpbuf
+               (copy-to-buffer original-buffer (point-min) (point-max))))
+            ((eq exit-code 1)
+             (error "Yapf failed, see %s buffer for details" (buffer-name tmpbuf))))
+      ;; Clean up tmpbuf
+      (kill-buffer tmpbuf)
+      ;; restore window to similar state
+      (goto-char original-point)
+      (cl-mapcar 'set-window-start buffer-windows original-window-pos)))
+
+  ;;;###autoload
+  (defun yapfify-buffer ()
+    "Yapfify whole buffer."
+    (interactive)
+    (yapfify-region (point-min) (point-max)))
+
+  ;;;###autoload
+  (defun yapfify-region-or-buffer ()
+    "Yapfify the region if it is active. Otherwise, yapfify the buffer"
+    (interactive)
+    (if (region-active-p)
+        (yapfify-region (region-beginning) (region-end))
+      (yapfify-buffer)))
+
+  ;;;###autoload
+  (define-minor-mode yapf-mode
+    "Automatically run YAPF before saving."
+    :lighter " YAPF"
+    (if yapf-mode
+        (add-hook 'before-save-hook 'yapfify-buffer nil t)
+      (remove-hook 'before-save-hook 'yapfify-buffer t)))
+
+  (provide 'yapfify)
+
+  ;;; yapfify.el ends here
+#+end_src
+
+#+begin_src emacs-lisp :results silent
+  (add-hook 'python-mode-hook 'hs-minor-mode)
+  (add-hook 'python-mode-hook 'yapf-mode)
+  (global-set-key (kbd "<f8>") 'python-yapf-region)
+
+  (defun my-python-pylint-hook ()
+    "Run pylint on the current Python file when F8 is pressed."
+    (interactive)  ;; 让函数变成可交互命令
+    (when (eq major-mode 'python-mode)  ;; 确保仅在 Python 模式下运行
+      (let ((filename (buffer-file-name)))
+        (when filename
+          (compile (concat "pylint " (shell-quote-argument filename)))))))
+
+  ;; 将函数绑定到 F8 键
+  (global-set-key (kbd "<f9>") 'my-python-pylint-hook)
+  ;; (add-hook 'after-save-hook #'my-python-save-hook)
+
+  (use-package py-isort
+    :ensure t
+    :hook (python-mode . py-isort-enable-on-save))  ;; 启用在保存时自动排序 import
+
+  (add-hook 'before-save-hook 'py-isort-buffer)
+#+end_src
