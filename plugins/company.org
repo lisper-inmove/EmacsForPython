@@ -20,7 +20,7 @@
   (setq anaconda-mode-complete-on-dot t)  ; 启用按点补全
 
   ;; (global-set-key (kbd "C-x 4 g") 'anaconda-mode-find-definitions)
-  (global-set-key (kbd "M-.") 'anaconda-mode-find-definitions)
+  ;; (global-set-key (kbd "M-.") 'anaconda-mode-find-definitions)
 #+end_src
 
 #+RESULTS:

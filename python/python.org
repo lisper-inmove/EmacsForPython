@@ -230,4 +230,6 @@
     :ensure t)
 
   (add-hook 'before-save-hook 'py-isort-buffer)
+
+  (global-set-key (kbd "M-.") 'anaconda-mode-find-assignments)
 #+end_src

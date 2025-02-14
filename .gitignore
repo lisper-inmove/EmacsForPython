@@ -12,3 +12,4 @@ auto-save-list
 bm-repository
 python/*
 !python/python.org
+tramp
