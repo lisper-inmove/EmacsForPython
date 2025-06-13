@@ -37,7 +37,7 @@
 (load-org "~/.emacs.d/preload")
 (load-org "~/.emacs.d/plugins")
 (load-org "~/.emacs.d/python")
-;; (load-org "~/.emacs.d/postload")
+(load-org "~/.emacs.d/postload")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -55,7 +55,7 @@
  '(git-gutter:window-width 2)
  '(helm-minibuffer-history-key "M-p")
  '(package-selected-packages
-   '(highlight-indent-guides evil find-file-in-project elpy tree-sitter-langs tree-sitter use-package)))
+   '(markdown-mode highlight-indent-guides evil find-file-in-project elpy tree-sitter-langs tree-sitter use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

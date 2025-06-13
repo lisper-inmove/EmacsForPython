@@ -9,7 +9,7 @@
     (global-unset-key key))
   (setq home "~/.emacs.d/")
   (global-visual-line-mode 1)
-  (set-frame-font "Monospace-15")
+  (set-frame-font "Monospace-28")
   ;; 使用y代替yes,n代替no
   (fset 'yes-or-no-p 'y-or-n-p)
   ;; 括号匹配
@@ -111,4 +111,11 @@
 * electric pair
 #+begin_src emacs-lisp
   (electric-pair-mode t)
+#+end_src
+
+* tramp
+#+begin_src emacs-lisp
+  (setq tramp-default-method "ssh")
+  (setq tramp-verbose 1)  ;; 减少日志
+  (setq tramp-default-remote-shell "/bin/bash")
 #+end_src
