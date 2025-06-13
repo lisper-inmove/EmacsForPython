@@ -114,6 +114,14 @@
 #+end_src
 
 * tramp
+#+begin_verse
+# 修改.zshrc文件放在最开始
+
+if [[ $TERM == "dumb" ]]; then
+  unsetopt zle
+  return
+fi
+#+end_verse
 #+begin_src emacs-lisp
   (setq tramp-default-method "ssh")
   (setq tramp-verbose 1)  ;; 减少日志
